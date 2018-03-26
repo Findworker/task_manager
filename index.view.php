@@ -19,7 +19,7 @@
 		}
 
 		.tasks {
-			
+					
             margin-right: 5px;
             font-size: 12px;
             text-align: left;
