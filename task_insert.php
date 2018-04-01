@@ -1,20 +1,51 @@
 <?php
 
-if (!empty($_POST['task'])) {
+require 'connection.php';
 
-	$task_title = $_POST['task'];
+//Process the array and insert in database
 
-	$query = '
-	
-		INSERT INTO tasks (tasks, status) VALUES ("' .$task_title. '", 0);
+$task_title = $_POST['task_title'];
 
-	';
+$query = '
 
-	$st = $pdo->prepare($query);
+	INSERT INTO 
+		tasks (tasks, status) 
+	VALUES 
+		("' .$task_title. '", 0);
 
-	$st->execute();
+';
 
-	header('location:index.php');
+$st = $pdo->prepare($query);
 
-}
+$st->execute();
 
+//Selecting from db
+
+$query = '
+
+	SELECT 
+		* 
+	FROM 
+		tasks 
+	ORDER BY 
+		id DESC
+	LIMIT 1;
+
+';
+
+
+$st= $pdo->prepare($query);
+
+$st->execute();
+
+$results = $st->fetchAll();
+
+$out = [];
+
+$out['task_name'] = $results[0]['tasks'];
+
+$out['id'] = $results[0]['id'];
+
+header('Content-Type: text/json; charset=utf-8');
+
+echo json_encode($out);
